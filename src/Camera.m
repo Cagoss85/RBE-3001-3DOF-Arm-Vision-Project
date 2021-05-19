@@ -93,8 +93,8 @@ classdef Camera
                 green = [];
             else
                 gPos = self.cam2Base([region_green.Centroid(1) region_green.Centroid(2)],false);
-                gPos = [gPos(1); gPos(2)];
-                gPos = self.calcActualPos(gPos);
+                %gPos = [gPos(1); gPos(2)];
+                %gPos = self.calcActualPos(gPos);
                 green = [1 gPos(1) gPos(2)];
             end
             
@@ -102,8 +102,8 @@ classdef Camera
                 red = [];
             else
                 rPos = self.cam2Base([region_red.Centroid(1) region_red.Centroid(2)],false);
-                rPos = [rPos(1); rPos(2)];
-                rPos = self.calcActualPos(rPos);
+                %rPos = [rPos(1); rPos(2)];
+                %rPos = self.calcActualPos(rPos);
                 red = [2 rPos(1) rPos(2)];
             end
             
@@ -111,8 +111,8 @@ classdef Camera
                 pink = [];
             else
                 pPos = self.cam2Base([region_pink.Centroid(1) region_pink.Centroid(2)],false);
-                pPos = [pPos(1); pPos(2)];
-                pPos = self.calcActualPos(pPos);
+                %pPos = [pPos(1); pPos(2)];
+                %pPos = self.calcActualPos(pPos);
                 pink = [3 pPos(1) pPos(2)];
             end
             
@@ -120,8 +120,8 @@ classdef Camera
                 yellow = [];
             else
                 yPos = self.cam2Base([region_yellow.Centroid(1) region_yellow.Centroid(2)],false);
-                yPos = [yPos(1); yPos(2)];
-                yPos = self.calcActualPos(yPos);
+                % yPos = [yPos(1); yPos(2)];
+                %yPos = self.calcActualPos(yPos);
                 yellow = [4 yPos(1) yPos(2)];
             end
             
