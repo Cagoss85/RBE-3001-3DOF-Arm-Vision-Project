@@ -52,22 +52,25 @@ classdef Camera
             %imshow(img);
             
             %applying the hsv filters to the masked workspace image
-            lime_green = lime_green_Mask(img);
-            red_orange = red_orange_Mask(img);
-            pink = pink_Mask(img);
-            yellow = yellow_Mask(img);
+%             lime_green = lime_green_Mask(img);
+%             red_orange = red_orange_Mask(img);
+%             pink = pink_Mask(img);
+%             yellow = yellow_Mask(img);
+            motz = Motz_Mask(img);
             
             %getting rid of noise from the hsv output 
-            noise_reduction_green = medfilt2(lime_green, [20 20]);
-            noise_reduction_red = medfilt2(red_orange, [20 20]);
-            noise_reduction_pink = medfilt2(pink, [20 20]);
-            noise_reduction_yellow = medfilt2(yellow, [20 20]);
+%             noise_reduction_green = medfilt2(lime_green, [20 20]);
+%             noise_reduction_red = medfilt2(red_orange, [20 20]);
+%             noise_reduction_pink = medfilt2(pink, [20 20]);
+%             noise_reduction_yellow = medfilt2(yellow, [20 20]);
+            noise_reduction_motz = medfilt2(motz, [20 20]);
             
             %finding the center points of the balls in pixel space 
-            region_green = regionprops(noise_reduction_green, 'centroid');
-            region_red = regionprops(noise_reduction_red, 'centroid');
-            region_pink = regionprops(noise_reduction_pink, 'centroid');
-            region_yellow = regionprops(noise_reduction_yellow, 'centroid');
+%             region_green = regionprops(noise_reduction_green, 'centroid');
+%             region_red = regionprops(noise_reduction_red, 'centroid');
+%             region_pink = regionprops(noise_reduction_pink, 'centroid');
+%             region_yellow = regionprops(noise_reduction_yellow, 'centroid');
+            region_motz = regionprops(noise_reduction_motz, 'centroid');
             
 %             %displaying the noise reduction outputs 
 %             figure(3)
@@ -89,43 +92,51 @@ classdef Camera
             
             %making a matrix to hold all the ball data while also
             %converting the pixel space coords to checkerboard coords
-            if isempty(region_green)
-                green = [];
-            else
-                gPos = self.cam2Base([region_green.Centroid(1) region_green.Centroid(2)],false);
-                gPos = [gPos(1); gPos(2)];
-                gPos = self.calcActualPos(gPos);
-                green = [1 gPos(1) gPos(2)];
+%             if isempty(region_green)
+%                 green = [];
+%             else
+%                 gPos = self.cam2Base([region_green.Centroid(1) region_green.Centroid(2)],false);
+%                 gPos = [gPos(1); gPos(2)];
+%                 gPos = self.calcActualPos(gPos);
+%                 green = [1 gPos(1) gPos(2)];
+%             end
+%             
+%             if isempty(region_red)
+%                 red = [];
+%             else
+%                 rPos = self.cam2Base([region_red.Centroid(1) region_red.Centroid(2)],false);
+%                 rPos = [rPos(1); rPos(2)];
+%                 rPos = self.calcActualPos(rPos);
+%                 red = [2 rPos(1) rPos(2)];
+%             end
+%             
+%             if isempty(region_pink)
+%                 pink = [];
+%             else
+%                 pPos = self.cam2Base([region_pink.Centroid(1) region_pink.Centroid(2)],false);
+%                 pPos = [pPos(1); pPos(2)];
+%                 pPos = self.calcActualPos(pPos);
+%                 pink = [3 pPos(1) pPos(2)];
+%             end
+%             
+%             if isempty(region_yellow)
+%                 yellow = [];
+%             else
+%                 yPos = self.cam2Base([region_yellow.Centroid(1) region_yellow.Centroid(2)],false);
+%                 yPos = [yPos(1); yPos(2)];
+%                 yPos = self.calcActualPos(yPos);
+%                 yellow = [4 yPos(1) yPos(2)];
+%             end
+%             
+            if isempty(region_motz)
+                motz = [];
+            else 
+                mPos = self.cam2Base([region_motz.Centroid(1) region_motz.Centroid(2)],false);
+                mPos = [mPos(1); mPos(2)];
+                mPos = self.calcActualPos(mPos);
+                motz = [5 mPos(1) mPos(2)];
             end
-            
-            if isempty(region_red)
-                red = [];
-            else
-                rPos = self.cam2Base([region_red.Centroid(1) region_red.Centroid(2)],false);
-                rPos = [rPos(1); rPos(2)];
-                rPos = self.calcActualPos(rPos);
-                red = [2 rPos(1) rPos(2)];
-            end
-            
-            if isempty(region_pink)
-                pink = [];
-            else
-                pPos = self.cam2Base([region_pink.Centroid(1) region_pink.Centroid(2)],false);
-                pPos = [pPos(1); pPos(2)];
-                pPos = self.calcActualPos(pPos);
-                pink = [3 pPos(1) pPos(2)];
-            end
-            
-            if isempty(region_yellow)
-                yellow = [];
-            else
-                yPos = self.cam2Base([region_yellow.Centroid(1) region_yellow.Centroid(2)],false);
-                yPos = [yPos(1); yPos(2)];
-                yPos = self.calcActualPos(yPos);
-                yellow = [4 yPos(1) yPos(2)];
-            end
-            
-            ball_data = cat(1, green, red, pink, yellow);
+            ball_data = cat(1, motz);
             
 %             figure(1)
 %             imshow(img)
@@ -173,15 +184,17 @@ classdef Camera
             xBallRobot = (yOffset - yBallCam) + 50;%Actual ball locations relative to the robot
             yBallRobot = (xBallCam + xOffset) - 100;                
             
+            [xBallRobot, yBallRobot]
+            
             r = sqrt(xBallRobot^2 + yBallRobot^2);
-            r = r+3; %Magic number for calibration
+            r = r-35; %Magic number for calibration
             thetaPolar = atan2d(yBallRobot, xBallRobot);
             thetaPickup = thetaPolar - 7;
             
             xPickup = r*cosd(thetaPickup);
             yPickup = r*sind(thetaPickup);
             
-            
+            [xPickup, yPickup]
             output = [xPickup yPickup];   
         end
         
